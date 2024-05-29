@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,15 +14,22 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [SerializeField] private List<Transform> floors;
+    [SerializeField] private List<Floor> floors;
 
+    [SerializeField] private FirstPersonController player;
     [SerializeField] private List<directionEnum> directionLevel;
     [SerializeField] private int level;
+    [SerializeField] private Vector3 directPos = new Vector3(0, 0, 0);
     [SerializeField] private Vector3 safePos = new Vector3(0, 0, 0);
+    [SerializeField] private Vector3 startPos = new Vector3(0, 0, 0);
 
-    private int countRandom = 0;
+    private float explodeWaitTime = 2;
+    private float explodeTime = 3;
+    private int size = 2;
+    private int count = 0;
     private int minPosition = -10;
     private int maxPosition = 10;
+    private bool isExplode = false;
     private void Awake()
     {
         Instance = this;
@@ -29,20 +37,21 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         level = 0;
-        foreach (Transform transform in floors)
-        {
-            if (transform.position == safePos)
-            {
-                Debug.Log(transform.parent.gameObject.name + "  " + transform.gameObject.name);
-            }
-        }
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (level > 0 && !isExplode && Input.GetKeyDown(KeyCode.R))
         {
             CreateDirectionLevel();
+            isExplode = true; 
+            SetStartPosPlayer();
         }
+    }
+    private void SetStartPosPlayer()
+    {
+        player.enabled = false;
+        player.transform.position = startPos;
+        player.enabled = true;
     }
     private List<int> GetSafePosition()
     {
@@ -52,19 +61,19 @@ public class GameManager : MonoBehaviour
         possiblePos.Add((int)directionEnum.left);
         possiblePos.Add((int)directionEnum.right);
 
-        if (safePos.x <= minPosition)
+        if (directPos.x <= minPosition)
         {
             possiblePos.Remove((int)directionEnum.left);
         }
-        else if (safePos.x >= maxPosition)
+        else if (directPos.x >= maxPosition)
         {
             possiblePos.Remove((int)directionEnum.right);
         }
-        if (safePos.z <= minPosition)
+        if (directPos.z <= minPosition)
         {
             possiblePos.Remove((int)directionEnum.down);
         }
-        else if (safePos.z >= maxPosition)
+        else if (directPos.z >= maxPosition)
         {
             possiblePos.Remove((int)directionEnum.up);
         }
@@ -74,33 +83,19 @@ public class GameManager : MonoBehaviour
     public void CreateDirectionLevel()
     {
         level += 1;
-        Menu.Instance.ShowLevel(level);
+        FrontScreen.Instance.ShowLevel(level);
         directionLevel.Clear();
         RandomPos();
     }
     private void RandomPos()
     {
-        countRandom += 1;
+        count += 1;
         List<int> possiblePos = GetSafePosition();
         directionEnum direction = (directionEnum)possiblePos[Random.Range(0, possiblePos.Count)];
         directionLevel.Add(direction);
 
-        switch (direction)
-        {
-            case directionEnum.up:
-                safePos = new Vector3 (safePos.x, safePos.y, safePos.z + 1);
-                break;
-            case directionEnum.down:
-                safePos = new Vector3(safePos.x, safePos.y, safePos.z - 1);
-                break;
-            case directionEnum.left:
-                safePos = new Vector3(safePos.x - 1, safePos.y, safePos.z);
-                break;
-            case directionEnum.right:
-                safePos = new Vector3(safePos.x + 1, safePos.y, safePos.z);
-                break;
-        }
-        if (countRandom < level)
+        directPos = SafePos(directPos, direction);
+        if (count < level)
         {
             RandomPos();
         }
@@ -109,9 +104,67 @@ public class GameManager : MonoBehaviour
             EndLevel();
         }
     }
+    public Vector3 SafePos(Vector3 pos, directionEnum directionEnum)
+    {
+        switch (directionEnum)
+        {
+            case directionEnum.up:
+                pos = new Vector3(pos.x, pos.y, pos.z + size);
+                break;
+            case directionEnum.down:
+                pos = new Vector3(pos.x, pos.y, pos.z - size);
+                break;
+            case directionEnum.left:
+                pos = new Vector3(pos.x - size, pos.y, pos.z);
+                break;
+            case directionEnum.right:
+                pos = new Vector3(pos.x + size, pos.y, pos.z);
+                break;
+        }
+        return pos;
+    }
     private void EndLevel()
     {
-        countRandom = 0;
-        Menu.Instance.GetDirectionList(directionLevel);
+        count = 0;
+        FrontScreen.Instance.GetDirectionList(directionLevel);
+    }
+    public void Run()
+    {
+        safePos = SafePos(safePos, directionLevel[count]);
+        StartCoroutine(WaitToExplore());
+    }
+    private IEnumerator WaitToExplore()
+    {
+        yield return new WaitForSeconds(explodeWaitTime);
+
+        foreach (Floor floor in floors)
+        {
+            if (floor.transform.position == safePos)
+            {
+                Debug.Log(floor.transform.parent.gameObject.name + "  " + floor.transform.gameObject.name);
+            }
+            floor.CheckSafePos(floor.transform.position == safePos);
+        }
+        StartCoroutine(Explore());
+    }
+    private IEnumerator Explore()
+    {
+        yield return new WaitForSeconds(explodeTime);
+
+        foreach (Floor floor in floors)
+        {
+            floor.CheckSafePos(true);
+        }
+        if (count < level - 1)
+        {
+            count += 1;
+            Run();
+        }
+        else
+        {
+            FrontScreen.Instance.EndLevel();
+            count = 0;
+            isExplode = false;
+        }
     }
 }
