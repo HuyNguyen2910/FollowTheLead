@@ -42,11 +42,16 @@ public class FrontScreen : MonoBehaviour
     {
         startButton.onClick.AddListener(StartGame);
     }
-    private void Update()
+    private void LateUpdate()
     {
         if (!isStartGame && Input.GetKeyDown(KeyCode.P))
         {
             StartGame();
+            if (GameManager.Instance.player.transform.position != new Vector3(0, 0, 0))
+            {
+                GameManager.Instance.player.transform.position = new Vector3(0, 0, 0);
+                Debug.Log(GameManager.Instance.player.transform.position);
+            }    
             isStartGame = true;
         }
         if (isTiming)
@@ -60,6 +65,14 @@ public class FrontScreen : MonoBehaviour
             }
         }
     }
+    //private void LateUpdate()
+    //{
+    //    if (isStartGame)
+    //    {
+    //        GameManager.Instance.player.transform.position = Vector3.zero;
+    //        //warpPosition = Vector3.zero;
+    //    }
+    //}
     private void StartGame()
     {
         startButton.gameObject.SetActive(false);

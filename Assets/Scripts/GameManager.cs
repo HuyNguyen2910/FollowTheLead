@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<Floor> floors;
 
-    [SerializeField] private FirstPersonController player;
+    [SerializeField] public FirstPersonController player;
     [SerializeField] private List<directionEnum> directionLevel;
     [SerializeField] private int level;
     [SerializeField] private Vector3 directPos = new Vector3(0, 0, 0);
@@ -44,14 +44,7 @@ public class GameManager : MonoBehaviour
         {
             CreateDirectionLevel();
             isExplode = true; 
-            SetStartPosPlayer();
         }
-    }
-    private void SetStartPosPlayer()
-    {
-        player.enabled = false;
-        player.transform.position = startPos;
-        player.enabled = true;
     }
     private List<int> GetSafePosition()
     {
