@@ -123,17 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &57064624 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2058626934380794301, guid: 783d8a27a996423468b4bcc66ad2d6f9, type: 3}
-  m_PrefabInstance: {fileID: 7451986043834156360}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &100443060
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,6 +314,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f1c467b7b965724bb6b217b84585835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!143 &378025750 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 410219765684619061, guid: 783d8a27a996423468b4bcc66ad2d6f9, type: 3}
+  m_PrefabInstance: {fileID: 7451986043834156360}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &460224588
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,6 +1225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09854e1341e8d714f97af9ba656b57c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 378025750}
   startButton: {fileID: 543847006}
   levelText: {fileID: 573620204}
   annouceText: {fileID: 1122752744}
@@ -2253,7 +2248,6 @@ MonoBehaviour:
   - {fileID: 2053733665}
   - {fileID: 2120581238}
   - {fileID: 2012133913}
-  player: {fileID: 57064624}
   directionLevel: 
   level: 1
   directPos: {x: 0, y: 0, z: 0}

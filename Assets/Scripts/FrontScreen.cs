@@ -5,11 +5,13 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System;
+using StarterAssets;
 
 public class FrontScreen : MonoBehaviour
 {
     public static FrontScreen Instance;
 
+    [SerializeField] private CharacterController player;
     [SerializeField] private Button startButton;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI annouceText;
@@ -20,12 +22,14 @@ public class FrontScreen : MonoBehaviour
     private string levelString = "Level ";
     private string animationArrow = "Arrow";
     private string readyString = "Ready...";
-    private string runString = "Run!";
+    private string moveString = "Move!";
     private string doneString = "Done!\nNext level!";
+    private string prepareString = "Prepare...";
     private int countShowArrow;
     private float time;
     private float endTime = 1;
     private float waitToRunTime = 2;
+    private float waitToShowArrow = 1;
     private float scaleTime = 0.2f;
     private bool isTiming = false;
     private bool isStartGame = false;
@@ -42,16 +46,12 @@ public class FrontScreen : MonoBehaviour
     {
         startButton.onClick.AddListener(StartGame);
     }
-    private void LateUpdate()
+    private void Update()
     {
         if (!isStartGame && Input.GetKeyDown(KeyCode.P))
         {
             StartGame();
-            if (GameManager.Instance.player.transform.position != new Vector3(0, 0, 0))
-            {
-                GameManager.Instance.player.transform.position = new Vector3(0, 0, 0);
-                Debug.Log(GameManager.Instance.player.transform.position);
-            }    
+            ResetPlayerPosition();
             isStartGame = true;
         }
         if (isTiming)
@@ -65,18 +65,16 @@ public class FrontScreen : MonoBehaviour
             }
         }
     }
-    //private void LateUpdate()
-    //{
-    //    if (isStartGame)
-    //    {
-    //        GameManager.Instance.player.transform.position = Vector3.zero;
-    //        //warpPosition = Vector3.zero;
-    //    }
-    //}
     private void StartGame()
     {
         startButton.gameObject.SetActive(false);
         GameManager.Instance.CreateDirectionLevel();
+    }
+    private void ResetPlayerPosition()
+    {
+        player.enabled = false;
+        player.transform.position = new Vector3(0, 0, 0);
+        player.transform.rotation = Quaternion.Euler(upRotation);
     }
     public void ShowLevel(int level)
     {
@@ -86,7 +84,28 @@ public class FrontScreen : MonoBehaviour
     {
         annouceText.transform.DOScale(0, scaleTime);
         directionLevel = direction;
-        CheckDirectionLevel();
+        //CheckDirectionLevel();
+        if (countShowArrow < directionLevel.Count)
+        {
+            UpdateAnnouce(prepareString, () => StartCoroutine(WaitToShowArrow()));
+        }
+    }
+    private IEnumerator WaitToShowArrow()
+    {
+        yield return new WaitForSeconds(waitToShowArrow);
+
+        OffAnnouce(CheckDirectionLevel);
+    }
+    private void CheckDirectionLevel()
+    {
+        if (countShowArrow < directionLevel.Count)
+        {
+            ShowArrow();
+        }
+        else
+        {
+            ReadyRun();
+        }
     }
     private void ShowArrow()
     {
@@ -110,17 +129,6 @@ public class FrontScreen : MonoBehaviour
         countShowArrow += 1;
         isTiming = true;
     }
-    private void CheckDirectionLevel()
-    {
-        if (countShowArrow < directionLevel.Count)
-        {
-            ShowArrow();
-        }
-        else
-        {
-            ReadyRun();
-        }
-    }
     private void ReadyRun()
     {
         countShowArrow = 0;
@@ -131,7 +139,9 @@ public class FrontScreen : MonoBehaviour
     private IEnumerator WaitToRun()
     {
         yield return new WaitForSeconds(waitToRunTime);
-        UpdateAnnouce(runString, GameManager.Instance.Run);
+
+        player.enabled = true;
+        UpdateAnnouce(moveString, GameManager.Instance.Run);
     }
     public void EndLevel()
     {
@@ -139,10 +149,13 @@ public class FrontScreen : MonoBehaviour
     }
     public void UpdateAnnouce(string str, Action action)
     {
-        annouceText.transform.DOScale(1, scaleTime);
         DOTween.Sequence().Append(annouceText.transform.DOScale(0, scaleTime))
             .AppendCallback(() => annouceText.text = str)
             .Append(annouceText.transform.DOScale(1, scaleTime))
             .AppendCallback(() => action?.Invoke());
+    }
+    public void OffAnnouce(Action action)
+    {
+        DOTween.Sequence().Append(annouceText.transform.DOScale(0, scaleTime)).AppendCallback(() => action?.Invoke());
     }
 }

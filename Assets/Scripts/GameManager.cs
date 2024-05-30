@@ -1,4 +1,3 @@
-using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +15,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<Floor> floors;
 
-    [SerializeField] public FirstPersonController player;
     [SerializeField] private List<directionEnum> directionLevel;
     [SerializeField] private int level;
     [SerializeField] private Vector3 directPos = new Vector3(0, 0, 0);
