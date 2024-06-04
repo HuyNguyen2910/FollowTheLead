@@ -272,9 +272,17 @@ MonoBehaviour:
   explodePref:
   - {fileID: 6096895709471153019, guid: 3b0596c1e659ba44b9e94049439134b9, type: 3}
   - {fileID: 8150010613868146376, guid: dbcafeb20332df543b932a99c72305a1, type: 3}
+  - {fileID: 1097273843596042995, guid: 0c60ad4a5232969428ede1e8f8c14ca2, type: 3}
+  - {fileID: 4449655799678315925, guid: a13eeb00a871e6f49bff0b598b07b369, type: 3}
+  - {fileID: 8405919439733426797, guid: 99772900246e2f241b07bf977a1cddc3, type: 3}
+  - {fileID: 2443340503323007945, guid: a29ca66016918da4b9686907767fc9a8, type: 3}
   floorMaterials:
-  - {fileID: 2100000, guid: 2cd2a7435494f914f888b66f850aa6a9, type: 2}
-  - {fileID: 2100000, guid: 80cbb1b9b7b6476408f9f3dbcdad2a58, type: 2}
+  - {fileID: 2100000, guid: 894c0cdfecf5e6a4abaae4c136ccb530, type: 2}
+  - {fileID: 2100000, guid: a553e4c1cf7ad1f40a3fb7ad45aa06a7, type: 2}
+  - {fileID: 2100000, guid: 2a3b225387114a1408d38effbd254500, type: 2}
+  - {fileID: 2100000, guid: c6df540aaa7f1d24d9d748e6c7abb9b4, type: 2}
+  - {fileID: 2100000, guid: 3c92806d74740b9449edd984b9e24ece, type: 2}
+  - {fileID: 2100000, guid: 19d99f069a0288e4e803bf91d63a81ec, type: 2}
 --- !u!1 &7557611748372282310
 GameObject:
   m_ObjectHideFlags: 0
@@ -338,7 +346,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2cd2a7435494f914f888b66f850aa6a9, type: 2}
+  - {fileID: 2100000, guid: 894c0cdfecf5e6a4abaae4c136ccb530, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

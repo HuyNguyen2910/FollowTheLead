@@ -15,7 +15,7 @@ public class UserData : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this);
     }
-    public void SavePrefsInt(string name, int value)
+    public void SaveCurrentShop(string name, int value)
     {
         PlayerPrefs.SetInt(name, value);
         PlayerPrefs.Save();
