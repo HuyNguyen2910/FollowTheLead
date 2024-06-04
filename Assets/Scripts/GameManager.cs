@@ -31,10 +31,20 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        UserData.Instance.LoadPrefs(GameManager.Instance.SetupFloor);
     }
     private void Start()
     {
         level = 0;
+        //UserData.Instance.SavePrefsInt(Define.EXPLODE_SHOP, 2);
+        //UserData.Instance.SavePrefsInt(Define.FLOOR_SHOP, 4);
+    }
+    public void SetupFloor()
+    {
+        foreach (Floor floor in floors)
+        {
+            floor.LoadExplodeFloorPref();
+        }
     }
     private void Update()
     {

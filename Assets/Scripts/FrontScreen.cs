@@ -51,7 +51,6 @@ public class FrontScreen : MonoBehaviour
         if (!isStartGame && Input.GetKeyDown(KeyCode.P))
         {
             StartGame();
-            ResetPlayerPosition();
             isStartGame = true;
         }
         if (isTiming)
@@ -67,6 +66,7 @@ public class FrontScreen : MonoBehaviour
     }
     private void StartGame()
     {
+        ResetPlayerPosition();
         startButton.gameObject.SetActive(false);
         GameManager.Instance.CreateDirectionLevel();
     }
