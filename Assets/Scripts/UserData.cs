@@ -19,7 +19,7 @@ public class UserData : MonoBehaviour
     {
         PlayerPrefs.SetInt(name, value);
         PlayerPrefs.Save();
-        LoadPrefs();
+        LoadPrefs(GameManager.Instance.SetupFloor);
     }
     public void LoadPrefs(Action act = null)
     {

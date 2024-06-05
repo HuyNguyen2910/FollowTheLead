@@ -17,11 +17,14 @@ public class ShopScreen : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        SaveExplodeShop(0, 1);
-        SaveFloorShop(0, 1);
         //LoadPrefs();
     }
-    public void SaveExplodeShop(int index, int value)
+    private void Start()
+    {
+        BuyExplodeShop(0, 1);
+        BuyFloorShop(0, 1);
+    }
+    public void BuyExplodeShop(int index, int value)
     {
         //SavePrefsInt(explodeString + index, value);
         PlayerPrefs.SetInt(explodeString + index, value);
@@ -33,11 +36,27 @@ public class ShopScreen : MonoBehaviour
         }
         //LoadPrefs();
     }
-    public void SaveFloorShop(int index, int value)
+    public void BuyFloorShop(int index, int value)
     {
         //SavePrefsInt(floorString + index, value);
         PlayerPrefs.SetInt(floorString + index, value);
         PlayerPrefs.Save();
+        for (int i = 0; i < floorShop.Count; i++)
+        {
+            floorShop[i] = PlayerPrefs.GetInt(floorString + i);
+            itemFloorShops[i].Setup(Convert.ToBoolean(floorShop[i]), i, false);
+        }
+    }
+    public void GetExplodeShop()
+    {
+        for (int i = 0; i < explodeShop.Count; i++)
+        {
+            explodeShop[i] = PlayerPrefs.GetInt(explodeString + i);
+            itemExplodeShops[i].Setup(Convert.ToBoolean(explodeShop[i]), i, true);
+        }
+    }
+    public void GetFloorShop()
+    {
         for (int i = 0; i < floorShop.Count; i++)
         {
             floorShop[i] = PlayerPrefs.GetInt(floorString + i);

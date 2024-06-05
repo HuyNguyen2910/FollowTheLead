@@ -13,8 +13,10 @@ public class FrontScreen : MonoBehaviour
 
     [SerializeField] private CharacterController player;
     [SerializeField] private Button startButton;
+    [SerializeField] private Button continueButton;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI annouceText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private Transform arrow;
 
     [SerializeField] private List<directionEnum> directionLevel;
@@ -25,7 +27,9 @@ public class FrontScreen : MonoBehaviour
     private string moveString = "Move!";
     private string doneString = "Done!\nNext level!";
     private string prepareString = "Prepare...";
+    private string highScoreKey = "HighScore";
     private int countShowArrow;
+    private int highScore;
     private float time;
     private float endTime = 1;
     private float waitToRunTime = 2;
@@ -44,7 +48,10 @@ public class FrontScreen : MonoBehaviour
     }
     private void Start()
     {
+        GetHighScore();
+
         startButton.onClick.AddListener(StartGame);
+        continueButton.onClick.AddListener(GameManager.Instance.ContinueLevel);
     }
     private void Update()
     {
@@ -64,6 +71,11 @@ public class FrontScreen : MonoBehaviour
             }
         }
     }
+    private void GetHighScore()
+    {
+        highScore = PlayerPrefs.GetInt(highScoreKey);
+        highScoreText.text = levelString + highScore;
+    }
     private void StartGame()
     {
         ResetPlayerPosition();
@@ -79,6 +91,12 @@ public class FrontScreen : MonoBehaviour
     public void ShowLevel(int level)
     {
         levelText.text = levelString + level;
+        if (level > highScore)
+        {
+            highScoreText.text = levelText.text;
+            PlayerPrefs.SetInt(highScoreKey, level);
+            PlayerPrefs.Save();
+        }
     }
     public void GetDirectionList(List<directionEnum> direction)
     {
@@ -146,6 +164,7 @@ public class FrontScreen : MonoBehaviour
     public void EndLevel()
     {
         UpdateAnnouce(doneString, null);
+        SetContinueButton(true);
     }
     public void UpdateAnnouce(string str, Action action)
     {
@@ -157,5 +176,9 @@ public class FrontScreen : MonoBehaviour
     public void OffAnnouce(Action action)
     {
         DOTween.Sequence().Append(annouceText.transform.DOScale(0, scaleTime)).AppendCallback(() => action?.Invoke());
+    }
+    public void SetContinueButton(bool isEnable)
+    {
+        continueButton.gameObject.SetActive(isEnable);
     }
 }

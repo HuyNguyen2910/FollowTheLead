@@ -31,13 +31,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        UserData.Instance.LoadPrefs(GameManager.Instance.SetupFloor);
+        UserData.Instance.LoadPrefs(SetupFloor);
     }
     private void Start()
     {
         level = 0;
-        //UserData.Instance.SavePrefsInt(Define.EXPLODE_SHOP, 2);
-        //UserData.Instance.SavePrefsInt(Define.FLOOR_SHOP, 4);
     }
     public void SetupFloor()
     {
@@ -50,9 +48,14 @@ public class GameManager : MonoBehaviour
     {
         if (level > 0 && !isExplode && Input.GetKeyDown(KeyCode.R))
         {
-            CreateDirectionLevel();
-            isExplode = true; 
+            ContinueLevel();
         }
+    }
+    public void ContinueLevel()
+    {
+        FrontScreen.Instance.SetContinueButton(false);
+        CreateDirectionLevel();
+        isExplode = true;
     }
     private List<int> GetSafePosition()
     {
