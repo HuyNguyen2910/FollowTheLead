@@ -48,7 +48,7 @@ public class FrontScreen : MonoBehaviour
     }
     private void Start()
     {
-        GetHighScore();
+        //GetHighScore();
 
         startButton.onClick.AddListener(StartGame);
         continueButton.onClick.AddListener(GameManager.Instance.ContinueLevel);
@@ -71,12 +71,12 @@ public class FrontScreen : MonoBehaviour
             }
         }
     }
-    private void GetHighScore()
-    {
-        highScore = PlayerPrefs.GetInt(highScoreKey);
-        highScoreText.text = levelString + highScore;
-    }
-    private void StartGame()
+    //private void GetHighScore()
+    //{
+    //    highScore = PlayerPrefs.GetInt(highScoreKey);
+    //    highScoreText.text = levelString + highScore;
+    //}
+    public void StartGame()
     {
         ResetPlayerPosition();
         startButton.gameObject.SetActive(false);
@@ -85,7 +85,7 @@ public class FrontScreen : MonoBehaviour
     private void ResetPlayerPosition()
     {
         player.enabled = false;
-        player.transform.position = new Vector3(0, 0, 0);
+        player.transform.position = new Vector3(0, 1, 0);
         player.transform.rotation = Quaternion.Euler(upRotation);
     }
     public void ShowLevel(int level)
@@ -157,7 +157,6 @@ public class FrontScreen : MonoBehaviour
     private IEnumerator WaitToRun()
     {
         yield return new WaitForSeconds(waitToRunTime);
-
         player.enabled = true;
         UpdateAnnouce(moveString, GameManager.Instance.Run);
     }
